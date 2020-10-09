@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const https = require('https');
+const { endpoint , apikey } = require('./config');
 
 const app = express();
 app.use(express.static("public"));
@@ -19,9 +20,9 @@ app.use(bodyParser.urlencoded({extended:true}));
     const userName = req.body.inputName;
     const userEmail = req.body.inputEmail;
 
-    const url = "https://us2.api.mailchimp.com/3.0/lists/30efe5832e/members"
+    const api_url = endpoint;
  
-  const data = {
+  const userData = {
       email_address: userEmail,
       status: "subscribed",
       merge_fields: {
@@ -29,15 +30,15 @@ app.use(bodyParser.urlencoded({extended:true}));
       }
   };
  
-  const jsonData = JSON.stringify(data);
+  const jsonData = JSON.stringify(userData);
   
   const options = {
     method: "POST",
-    auth: "key:66c39971af0f5879b5bc7fd0aad51b1a-us2",
+    auth: "key:"+apikey,
     headers: "content-type: application/json"
   };
  
-  const request = https.request(url, options, (response) =>{
+  const request = https.request(api_url, options, (response) =>{
             if(response.statusCode === 200)
                 res.sendFile(__dirname+"/success.html");
             else
